@@ -1,3 +1,6 @@
+console.log('📢 index.js is starting...');
+
+
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
