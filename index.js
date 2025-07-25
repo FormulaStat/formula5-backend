@@ -1,6 +1,5 @@
 console.log('📢 index.js is starting...');
 
-
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
@@ -16,37 +15,38 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '', // Update if needed
+  password: '', // You can store this in a .env file for security
   database: 'formula5'
 });
 
-// Connect to database
+// Connect to MySQL
 db.connect(err => {
   if (err) {
-    console.error('Database connection failed:', err.stack);
-    return;
+    console.error('❌ MySQL connection failed:', err.message);
+    process.exit(1); // Exit the server if DB fails
   }
-  console.log('✅ Connected to MySQL as ID', db.threadId);
+  console.log('✅ Connected to MySQL. Thread ID:', db.threadId);
 });
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('✅ Formula5 Backend API is running');
+  res.send('✅ Formula5 Backend API is live and working!');
 });
 
-// Example route to fetch users
+// Test route to fetch all users
 app.get('/users', (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
+  const sql = 'SELECT * FROM users';
+
+  db.query(sql, (err, results) => {
     if (err) {
-      console.error('❌ Error fetching users:', err);
-      res.status(500).send('Error fetching users');
-    } else {
-      res.json(results);
+      console.error('❌ Failed to fetch users:', err.message);
+      return res.status(500).json({ error: 'Failed to fetch users' });
     }
+    res.json(results);
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at: http://localhost:${PORT}`);
 });
