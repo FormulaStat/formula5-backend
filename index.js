@@ -64,3 +64,39 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+
+const express = require('express');
+const mysql = require('mysql2');
+const cors = require('cors');
+
+const app = express();
+const PORT = 5000;
+
+app.use(cors());
+app.use(express.json());
+
+// MySQL connection
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'formula5'
+});
+
+db.connect(err => {
+  if (err) {
+    console.error('Database connection failed:', err.stack);
+    return;
+  }
+  console.log('Connected to MySQL as ID', db.threadId);
+});
+
+// Basic route
+app.get('/', (req, res) => {
+  res.send('Formula5 Backend is running');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
